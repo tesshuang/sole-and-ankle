@@ -5,6 +5,11 @@ import { COLORS, WEIGHTS } from '../../constants';
 import { formatPrice, pluralize, isNewShoe } from '../../utils';
 import Spacer from '../Spacer';
 
+const LABEL_COLORS = {
+  'new-release': COLORS.secondary,
+  'on-sale': COLORS.primary
+};
+
 const ShoeCard = ({
   slug,
   name,
@@ -31,9 +36,20 @@ const ShoeCard = ({
       ? 'new-release'
       : 'default'
 
+  const getSaleLabel = () => {
+    if (variant === 'on-sale')  {
+      return <SalePrice style={{ '--background-color': LABEL_COLORS[variant]}}>Sale</SalePrice>;
+    } else if (variant === 'new-release') {
+      return <SalePrice style={{ '--background-color': LABEL_COLORS[variant]}}>Just release!</SalePrice>;
+    } else {
+      return null;
+    }
+  }
+
   return (
     <Link href={`/shoe/${slug}`}>
       <Wrapper>
+        {getSaleLabel()}
         <ImageWrapper>
           <Image alt="" src={imageSrc} />
         </ImageWrapper>
@@ -56,6 +72,8 @@ const Link = styled.a`
 `;
 
 const Wrapper = styled.article`
+  position: relative;
+  isolation: isolate;
 `;
 
 const ImageWrapper = styled.div`
@@ -83,7 +101,15 @@ const ColorInfo = styled.p`
 
 const SalePrice = styled.span`
   font-weight: ${WEIGHTS.medium};
-  color: ${COLORS.primary};
+  color: ${COLORS.white};
+  font-size: 0.875rem;
+  padding: 8px 10px;
+  position: absolute;
+  z-index: 1;
+  top: 12px;
+  right: -4px;
+  border-radius: 2px;
+  background-color: var(--background-color); 
 `;
 
 export default ShoeCard;
